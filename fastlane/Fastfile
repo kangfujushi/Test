@@ -1,0 +1,37 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  lane :beta do
+  	build_number = get_build_number_repository()
+    build_app(
+    	scheme: "Test",
+    	clean: true,
+		silent: true,
+		export_method: "development",
+		output_directory: "~/Desktop/测试包",
+		output_name: "Test_beta_build_"+build_number,
+			)
+    # upload_to_testflight
+  end
+  lane :release do
+    capture_screenshots
+    build_app
+    upload_to_app_store       # Upload the screenshots and the binary to iTunes
+    slack
+  end
+end
